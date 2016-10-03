@@ -1,7 +1,11 @@
 <div class="container" ng-init="init()">
 
-	<div ng-repeat="alert in errors" ng-class="'alert alert-' + (alert.type || 'warning')">
+	<!-- <div ng-repeat="alert in errors" ng-class="'fade alert alert-' + (alert.type || 'warning')">
 		<button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="closeAlert($index)">&times;</button>
+		<strong>{{alert.status}}</strong> {{alert.message ? alert.message : alert.statusText}}
+	</div> -->
+	
+	<div uib-alert ng-repeat="alert in errors" class="{{'fade in alert-' + (alert.type || 'warning')}}" close="closeAlert($index)" dismiss-on-timeout="5000">
 		<strong>{{alert.status}}</strong> {{alert.message ? alert.message : alert.statusText}}
 	</div>
 

@@ -16,7 +16,7 @@ define(function() {
 
 		$scope.init = function() {
 			getWord();
-			$document.on("keydown", keyUpHandler);
+			$document.on("keydown", keyHandler);
 		};
 
 		$scope.closeAlert = function(index) {
@@ -24,14 +24,16 @@ define(function() {
 		};
 
 		$scope.$on('$destroy', function() {
-			$document.off('keydown', keyUpHandler);
+			$document.off('keydown', keyHandler);
 		});
 
-		function keyUpHandler(event) {
+		function keyHandler(event) {
 			if (event.keyCode == 13) {
 				checkWord();
 			} else if (event.keyCode == 8) {
-				$scope.words.answerWord = $scope.words.answerWord.slice(0, -1);
+				if($scope.words.answerWord.length > 0){
+					$scope.words.answerWord = $scope.words.answerWord.slice(0, -1);
+				}
 			} else {
 				var regex = /^[a-zA-Z]$/;
 				var key = event.key;
