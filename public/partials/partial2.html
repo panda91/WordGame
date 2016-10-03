@@ -1,0 +1,33 @@
+<div class="container" ng-init="init()">
+
+	<div ng-repeat="alert in errors" ng-class="'alert alert-' + (alert.type || 'warning')">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="closeAlert($index)">&times;</button>
+		<strong>{{alert.status}}</strong> {{alert.message ? alert.message : alert.statusText}}
+	</div>
+
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<h2><strong>Your have {{correctedWords}} corrected answers:</strong></h2>
+		</div>
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-show="completeWords.length > 0">
+
+			<div ng-repeat="word in completeWords" class="result_word">
+				<div ng-repeat="w in word track by $index" class="result_word_item">{{w == "*" ? "" : w}}</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<h2><strong>You missed {{notAnswer}} words</strong></h2>
+		</div>
+		
+		
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-show="missedWords.length > 0">
+
+			<div ng-repeat="word in missedWords" class="result_word">
+				<div ng-repeat="w in word track by $index" class="result_word_item">{{w == "*" ? "" : w}}</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,28 @@
+<div class="container" ng-init="init()">
+
+	<div ng-repeat="alert in errors" ng-class="'alert alert-' + (alert.type || 'warning')">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="closeAlert($index)">&times;</button>
+		<strong>{{alert.status}}</strong> {{alert.message ? alert.message : alert.statusText}}
+	</div>
+
+	<div class="row word_container">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div ng-show="(words||{}).word.length > 0">
+				<div ng-repeat="item in words.word track by $index" class="word">{{item}}</div>
+			</div>
+		</div>
+
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 user_input">
+			<div>{{words.answerWord}}</div>
+		</div>
+	</div>
+
+	<div class="row" ng-show="completeWords.length > 0">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 result_container">
+
+			<div ng-repeat="word in completeWords" class="result_word">
+				<div ng-repeat="w in word track by $index" class="result_word_item">{{w == "*" ? "" : w}}</div>
+			</div>
+		</div>
+	</div>
+</div>

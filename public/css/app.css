@@ -1,0 +1,45 @@
+/* app css stylesheet */
+
+.row{
+	margin-top: 10px;
+}
+
+.word_container{
+	font-size: 4em;
+	font-weight: bold;
+	text-align: center;
+	
+	padding: 40px;
+}
+
+.word{
+	border: 2px solid #cccccc;
+	border-radius: 5px;
+	display: inline-block;
+	width: 2em;
+	margin: 10px 20px;
+}
+
+.user_input{
+	font-size: 2em;
+	height: 100px;
+}
+
+.result_container{
+	text-align: center;
+}
+
+.result_word{
+	margin: 10px 50px 10px 5px;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.result_word_item{
+	border: 2px solid #cccccc;
+	font-size: 1.5em;
+	width: 30px;
+	height: 30px;
+	text-align: center;
+	display: inline-block;
+}
