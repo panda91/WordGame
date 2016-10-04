@@ -40,13 +40,13 @@ define(function() {
 				if (regex.test(key)) {
 					if ($scope.words.word.indexOf(key) != -1) {
 						$scope.words.answerWord += key;
-					} else {
+					} /*else {
 						$scope.errors
 								.push({
 									type : "warning",
 									message : "Word don't have this character! Please try again."
 								});
-					}
+					}*/
 				}
 			}
 			$scope.$apply();
@@ -206,6 +206,43 @@ define(function() {
 		}
 	}
 	controllers.WithDrawnCtrl.$inject = [ '$scope', '$http' ];
+	
+	controllers.addWordCtrl = function($scope, $http){
+		$scope.word = "";
+		$scope.relatives = "";
+		$scope.errors = [];
+		
+		$scope.submit = function(){
+			if($scope.word && $scope.relatives){
+				$http({
+					method : 'POST',
+					url : '/checkWord',
+					data : JSON.stringify($scope.words),
+					responseType : 'json',
+					dataType : 'json',
+					headers : {
+						'Content-Type' : 'application/json;charset=UTF-8',
+						'accept' : 'application/json'
+					}
+				}).then(success, error);
+			}
+		}
+		
+		function success(){
+			
+		}
+		
+		function error(response) {
+			$scope.errors.push({
+				type : "danger",
+				status : response.status,
+				statusText : response.statusText,
+				message : response.data.message
+			});
+		}
+	}
+	
+	controllers.addWordCtrl.$inject = [ '$scope', '$http' ];
 
 	return controllers;
 

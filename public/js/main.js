@@ -42,6 +42,7 @@ require(['angular', './controllers', './directives', './filters', './services', 
       config(['$routeProvider', function($routeProvider) {
         $routeProvider.when('/play', {templateUrl: 'partials/partial1.html', controller: controllers.AppController});
         $routeProvider.when('/withdrawn', {templateUrl: 'partials/partial2.html', controller: controllers.WithDrawnCtrl});
+        $routeProvider.when('/admin', {templateUrl: 'partials/admin.html', controller: controllers.addWordCtrl});
         $routeProvider.otherwise({redirectTo: '/play'});
       }]);
 

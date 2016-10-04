@@ -15,5 +15,8 @@ GET        /withdrawn                        controllers.Application.withdrawn()
 #Check data
 POST        /checkWord                       controllers.Application.checkWord()
 
+#Add data
+POST        /addWord                       	 controllers.Application.addWord()
+
 # Map the JS resource paths
 GET        /*file                            controllers.Assets.versioned(path="/public", file: Asset)

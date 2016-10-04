@@ -23,6 +23,27 @@ public class Application extends Controller {
 	public Result index() {
 		return ok(index.render());
 	}
+	
+	public Result addWord(){
+		JsonNode json = request().body().asJson();
+		ObjectNode objNode = Json.newObject();
+		
+		if (json == null) {
+			objNode.put("message", "Expecting json data");
+			return badRequest(objNode);
+		}else{
+			String word = json.findPath("word").textValue();
+			String relatives = json.findPath("relatives").textValue();
+			
+			if(word == null || relatives == null){
+				objNode.put("message", "Data is missing!");
+				return badRequest(objNode);
+			}
+		}
+		
+		objNode.put("message", "Adding word is failed!");
+		return badRequest(objNode);
+	}
 
 	public Result getWord() {
 
