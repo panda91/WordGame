@@ -10,7 +10,7 @@ nav.navbar{
 .score_area{
 	position: absolute;
 	top: 10%;
-	left: 2px;
+	left: -85px;
 }
 
 .score_area p{
@@ -26,6 +26,7 @@ nav.navbar{
 	font-weight: bold;
 	text-align: center;
 	padding: 40px;
+	position: relative;
 }
 
 .word {

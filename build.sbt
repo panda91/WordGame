@@ -20,9 +20,6 @@ routesGenerator := InjectedRoutesGenerator
 
 pipelineStages := Seq(rjs, digest, gzip)
 
-
-fork in run := true
-
 EclipseKeys.preTasks := Seq(compile in Compile)
 // Java project. Don't expect Scala IDE
 EclipseKeys.projectFlavor := EclipseProjectFlavor.Java

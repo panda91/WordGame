@@ -6,7 +6,7 @@
 	</div> -->
 	
 	<div uib-alert ng-repeat="alert in errors" class="repeated-item" type="{{(alert.type || 'warning')}}" close="closeAlert($index)" dismiss-on-timeout="10000">
-		<strong>{{alert.status}}</strong> {{alert.message ? alert.message : alert.statusText}}
+		<strong>Failed!</strong> {{alert.message ? alert.message : alert.statusText}}
 	</div>
 	
 	<div class="row">

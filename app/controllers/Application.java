@@ -63,7 +63,8 @@ public class Application extends Controller {
 
 				try {
 					if (oldWord != null) {
-						oldWord.getDependents().addAll(setDependents);
+						setDependents.addAll(oldWord.getDependents());
+						oldWord.setDependents(new ArrayList<>(setDependents));
 
 						wordDAO.updateWord(oldWord);
 					} else {
