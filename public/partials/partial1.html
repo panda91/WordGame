@@ -4,12 +4,18 @@
 		<button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="closeAlert($index)">&times;</button>
 		<strong>{{alert.status}}</strong> {{alert.message ? alert.message : alert.statusText}}
 	</div> -->
-	
-	<div uib-alert ng-repeat="alert in errors" class="{{'fade in alert-' + (alert.type || 'warning')}}" close="closeAlert($index)" dismiss-on-timeout="5000">
+
+	<div uib-alert ng-repeat="alert in errors" class="repeated-item" type="{{(alert.type || 'warning')}}" close="closeAlert($index)" dismiss-on-timeout="10000">
 		<strong>{{alert.status}}</strong> {{alert.message ? alert.message : alert.statusText}}
 	</div>
 
 	<div class="row word_container">
+		<div class="score_area">
+			<h3>Your score:</h3>
+			<p>
+				<strong>{{point}}</strong>
+			</p>
+		</div>
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<div ng-show="(words||{}).word.length > 0">
 				<div ng-repeat="item in words.word track by $index" class="word">{{item}}</div>

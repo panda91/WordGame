@@ -1,18 +1,34 @@
 /* app css stylesheet */
-
-.row{
+.row {
 	margin-top: 10px;
 }
 
-.word_container{
+nav.navbar{
+	border-radius: 0px;
+}
+
+.score_area{
+	position: absolute;
+	top: 10%;
+	left: 2px;
+}
+
+.score_area p{
+	text-align: center;
+}
+
+.alert .glyphicon{
+	font-size: 2em;
+	vertical-align: middle;
+}
+.word_container {
 	font-size: 4em;
 	font-weight: bold;
 	text-align: center;
-	
 	padding: 40px;
 }
 
-.word{
+.word {
 	border: 2px solid #cccccc;
 	border-radius: 5px;
 	display: inline-block;
@@ -20,26 +36,69 @@
 	margin: 10px 20px;
 }
 
-.user_input{
+.user_input {
 	font-size: 2em;
 	height: 100px;
 }
 
-.result_container{
+.result_container {
 	text-align: center;
 }
 
-.result_word{
+.result_word {
 	margin: 10px 50px 10px 5px;
 	display: inline-block;
 	vertical-align: middle;
 }
 
-.result_word_item{
+.result_word_item {
 	border: 2px solid #cccccc;
 	font-size: 1.5em;
 	width: 30px;
 	height: 30px;
 	text-align: center;
 	display: inline-block;
+}
+
+.my_animation {
+	transition: all linear 0.5s;
+}
+
+.my_animation.ng-hide {
+	opacity: 0;
+}
+
+/*
+  We're using CSS transitions for when
+  the enter and move events are triggered
+  for the element that has the .repeated-item
+  class
+*/
+.repeated-item.ng-enter, .repeated-item.ng-move {
+	transition: all 0.5s linear;
+	opacity: 0;
+}
+
+/*
+ The ng-enter-active and ng-move-active
+ are where the transition destination properties
+ are set so that the animation knows what to
+ animate.
+*/
+.repeated-item.ng-enter.ng-enter-active, .repeated-item.ng-move.ng-move-active {
+	opacity: 1;
+}
+
+/*
+  We're using CSS keyframe animations for when
+  the leave event is triggered for the element
+  that has the .repeated-item class
+*/
+.repeated-item.ng-leave {
+	animation: 0.5s my_animation;
+}
+
+@keyframes my_animation {
+	from { opacity:1; }
+	to { opacity: 0; }
 }

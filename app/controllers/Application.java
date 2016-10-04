@@ -1,7 +1,9 @@
 package controllers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -19,30 +21,69 @@ public class Application extends Controller {
 	private static List<Word> wordList;
 	private static Word mainWord;
 	private static Word shuffleWord;
+	private static int point;
 
 	public Result index() {
+		point = 0;
 		return ok(index.render());
 	}
-	
-	public Result addWord(){
+
+	public Result addWord() {
 		JsonNode json = request().body().asJson();
 		ObjectNode objNode = Json.newObject();
-		
+
 		if (json == null) {
 			objNode.put("message", "Expecting json data");
 			return badRequest(objNode);
-		}else{
-			String word = json.findPath("word").textValue();
+		} else {
+			String word = json.findPath("name").textValue();
 			String relatives = json.findPath("relatives").textValue();
-			
-			if(word == null || relatives == null){
+
+			if (word == null || relatives == null) {
 				objNode.put("message", "Data is missing!");
+				return badRequest(objNode);
+			} else if (!word.equals("") && !word.equals(" ")) {
+				word = word.trim().toLowerCase();
+				String[] dependents = relatives.split(",");
+				WordDAO wordDAO = new WordDAO();
+
+				Word oldWord = wordDAO.findWord(word);
+				Word newWord = new Word();
+				newWord.setWord(word);
+
+				Set<String> setDependents = new HashSet<>();
+				for (String item : dependents) {
+					if (!item.equals("") && !item.equalsIgnoreCase(" ")) {
+						setDependents.add(item.trim().toLowerCase());
+					}else{
+						objNode.put("message", "Your relative words is invalid!");
+						return badRequest(objNode);
+					}
+				}
+
+				try {
+					if (oldWord != null) {
+						oldWord.getDependents().addAll(setDependents);
+
+						wordDAO.updateWord(oldWord);
+					} else {
+						newWord.setDependents(new ArrayList<>(setDependents));
+
+						wordDAO.insertWord(newWord);
+					}
+
+					objNode.put("status", "OK");
+					return ok(objNode);
+				} catch (Exception e) {
+					// TODO: handle exception
+					objNode.put("message", e.getMessage());
+					return internalServerError(objNode);
+				}
+			}else{
+				objNode.put("message", "Word is missing!");
 				return badRequest(objNode);
 			}
 		}
-		
-		objNode.put("message", "Adding word is failed!");
-		return badRequest(objNode);
 	}
 
 	public Result getWord() {
@@ -57,21 +98,22 @@ public class Application extends Controller {
 
 		return ok(Json.toJson(shuffleWord)).as("application/json;charset=UTF-8");
 	}
-	
-	public Result withdrawn(){
+
+	public Result withdrawn() {
 		List<String> dependents = shuffleWord.getDependents();
 		List<String> answers = new ArrayList<>();
-		
+
 		for (String item : dependents) {
 			if (!item.contains("*")) {
 				answers.add(item);
 			}
 		}
-		
+
 		ObjectNode objNode = Json.newObject();
+		objNode.put("point", point);
 		objNode.putPOJO("missedWord", Json.toJson(mainWord));
 		objNode.putPOJO("answers", Json.toJson(answers));
-		
+
 		return ok(objNode).as("application/json;charset=UTF-8");
 	}
 
@@ -90,10 +132,11 @@ public class Application extends Controller {
 				return badRequest("Missing properties");
 			} else {
 				if (mainWord != null) {
-					int length = mainWord.getDependents().size();
+					List<String> dependents = mainWord.getDependents();
+					int length = dependents.size();
 
 					for (int i = 0; i < length; i++) {
-						if (answerWord.equals(mainWord.getDependents().get(i))) {
+						if (answerWord.equals(dependents.get(i))) {
 							List<String> maskList = shuffleWord.getDependents();
 							int maskLength = maskList.size();
 							for (int j = 0; j < maskLength; j++) {
@@ -102,9 +145,9 @@ public class Application extends Controller {
 									break;
 								}
 							}
-							mainWord.getDependents().remove(i);
+							dependents.remove(i);
 
-							if (mainWord.getDependents().isEmpty()) {
+							if (dependents.isEmpty()) {
 								try {
 									this.getData();
 									shuffleWord = this.getShuffleWord(mainWord);
@@ -119,10 +162,20 @@ public class Application extends Controller {
 								objNode.put("status", "passed");
 								objNode.putPOJO("items", Json.toJson(maskList));
 							}
+							
+							objNode.put("point", ++point);
 
 							return ok(objNode).as("application/json;charset=UTF-8");
 						} else if ((i + 1) == length) {
-							objNode.put("message", "Word doesn't exist");
+							List<String> maskList = shuffleWord.getDependents();
+							for (String item : maskList) {
+								if(item.equals(answerWord)){
+									objNode.put("message", "You've already answered this word!");
+									return notFound(objNode);
+								}
+							}
+							objNode.put("point", --point);
+							objNode.put("message", "Your answer is wrong!");
 							return notFound(objNode);
 						}
 					}
@@ -146,7 +199,7 @@ public class Application extends Controller {
 				throw new RuntimeException("Unexpected error in getting data: " + e.getMessage());
 			}
 		}
-		if(wordList != null && !wordList.isEmpty()){
+		if (wordList != null && !wordList.isEmpty()) {
 			int index = ThreadLocalRandom.current().nextInt(0, wordList.size());
 
 			mainWord = wordList.get(index);

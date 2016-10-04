@@ -7,25 +7,28 @@
 		</div>
 		<div class="panel-body">
 			<form name="addForm" ng-submit="submit()" role="form">
-				<div uib-alert ng-repeat="alert in errors" class="{{'fade in alert-' + (alert.type || 'warning')}}" close="closeAlert($index)" dismiss-on-timeout="5000">
+				<div uib-alert ng-repeat="alert in errors" class="repeated-item" type="{{alert.type}}"
+					close="closeAlert($index)" dismiss-on-timeout="10000">
+					<span class="glyphicon glyphicon-ok-circle" aria-hidden="true" ng-show="(alert.type == 'success')"></span>
 					<strong>{{alert.status}}</strong> {{alert.message ? alert.message : alert.statusText}}
 				</div>
 
 				<div class="form-group">
 					<label for="wordTXT">Word</label> 
-					<input type="text" class="form-control" id="wordTXT" name="wordTXT" ng-model="word" placeholder="Word"
+					<input type="text" class="form-control" id="wordTXT" name="wordTXT" ng-model="word.name" placeholder="Word"
 						required="required">
 				</div>
 
 				<div class="form-group">
 					<label for="relativeWordTXT">Equivalent words</label> 
 					<input type="text" class="form-control" 
-						id="relativeWordTXT" name="relativeWordTXT" ng-model="relatives"
+						id="relativeWordTXT" name="relativeWordTXT" ng-model="word.relatives"
 						placeholder="If you want to add multiple, use , as delimiter" required="required">
 				</div>
 
 				<button type="submit" class="btn btn-primary">
-					Submit <i class="fa fa-spinner fa-spin" style="font-size: 24px"></i>
+					Submit 
+					<i class="fa fa-spinner fa-spin my_animation" style="font-size: 24px" ng-show="isLoading"></i>
 				</button>
 			</form>
 		</div>

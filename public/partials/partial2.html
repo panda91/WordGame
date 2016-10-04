@@ -5,13 +5,19 @@
 		<strong>{{alert.status}}</strong> {{alert.message ? alert.message : alert.statusText}}
 	</div> -->
 	
-	<div uib-alert ng-repeat="alert in errors" class="{{'fade in alert-' + (alert.type || 'warning')}}" close="closeAlert($index)" dismiss-on-timeout="5000">
+	<div uib-alert ng-repeat="alert in errors" class="repeated-item" type="{{(alert.type || 'warning')}}" close="closeAlert($index)" dismiss-on-timeout="10000">
 		<strong>{{alert.status}}</strong> {{alert.message ? alert.message : alert.statusText}}
+	</div>
+	
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<h2><strong>Your scored {{point}} points</strong></h2>
+		</div>
 	</div>
 
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-			<h2><strong>Your have {{correctedWords}} corrected answers:</strong></h2>
+			<h2><strong>Your have {{correctedWords}} corrected answers</strong></h2>
 		</div>
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-show="completeWords.length > 0">
 

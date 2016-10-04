@@ -13,6 +13,7 @@ define(function() {
 		$scope.words = {};
 		$scope.completeWords = [];
 		$scope.errors = [];
+		$scope.point = 0;
 
 		$scope.init = function() {
 			getWord();
@@ -89,6 +90,10 @@ define(function() {
 
 							getDependentWords(res.data.items.dependents);
 						}
+						
+						if(res.data.point){
+							$scope.point = res.data.point;
+						}
 					}
 				}, error);
 			}
@@ -96,11 +101,16 @@ define(function() {
 
 		function success(response) {
 			var data = response.data;
-			if (data) {
+			if (data && data.word && data.dependents) {
 				getWords(data);
 
 				getDependentWords(data.dependents);
 
+			}else{
+				$scope.errors.push({
+					type : "warning",
+					message : "Seem don't have data right now! Please try again later."
+				});
 			}
 		}
 
@@ -137,6 +147,10 @@ define(function() {
 				statusText : response.statusText,
 				message : response.data.message
 			});
+			
+			if(response.data.point){
+				$scope.point = response.data.point;
+			}
 		}
 	};
 	controllers.AppController.$inject = [ '$scope', '$http', '$document' ];
@@ -149,6 +163,7 @@ define(function() {
 		$scope.completeWords = [];
 		$scope.correctedWords = 0;
 		$scope.errors = [];
+		$scope.point = 0;
 		
 		$scope.init = function(){
 			$http({
@@ -169,6 +184,10 @@ define(function() {
 				var missedWords = res.data.missedWord;
 				
 				var wordLength = missedWords.dependents.length;
+				
+				if(res.data.point){
+					$scope.point = res.data.point;
+				}
 				
 				for (var j = 0; j < wordLength; j++) {
 					var char = [];
@@ -204,20 +223,28 @@ define(function() {
 				message : response.data.message
 			});
 		}
+		
+		$scope.closeAlert = function(index) {
+			$scope.errors.splice(index, 1);
+		};
 	}
 	controllers.WithDrawnCtrl.$inject = [ '$scope', '$http' ];
 	
-	controllers.addWordCtrl = function($scope, $http){
-		$scope.word = "";
-		$scope.relatives = "";
+	controllers.addWordCtrl = function($scope, $http, $timeout){
+		$scope.word = {
+				name: "",
+				relatives: ""
+		};
 		$scope.errors = [];
+		$scope.isLoading =false;
 		
 		$scope.submit = function(){
-			if($scope.word && $scope.relatives){
+			if($scope.word.name && $scope.word.relatives){
+				$scope.isLoading =true;
 				$http({
 					method : 'POST',
-					url : '/checkWord',
-					data : JSON.stringify($scope.words),
+					url : '/addWord',
+					data : JSON.stringify($scope.word),
 					responseType : 'json',
 					dataType : 'json',
 					headers : {
@@ -228,8 +255,27 @@ define(function() {
 			}
 		}
 		
-		function success(){
-			
+		function success(res){
+			if(res.data){
+				var status = res.data.status;
+				if(status != 'OK'){
+					$scope.errors.push({
+						type : "danger",
+						message : "Failed to update! Please try again later."
+					});
+				}else{
+					$scope.word = {
+							name: "",
+							relatives: ""
+					};
+					$scope.errors.push({
+						type : "success",
+						message : "Your data added successfully."
+					});
+					
+				}
+			}
+			$scope.isLoading =false;
 		}
 		
 		function error(response) {
@@ -239,10 +285,15 @@ define(function() {
 				statusText : response.statusText,
 				message : response.data.message
 			});
+			$scope.isLoading =false;
 		}
+		
+		$scope.closeAlert = function(index) {
+			$scope.errors.splice(index, 1);
+		};
 	}
 	
-	controllers.addWordCtrl.$inject = [ '$scope', '$http' ];
+	controllers.addWordCtrl.$inject = [ '$scope', '$http', '$timeout' ];
 
 	return controllers;
 

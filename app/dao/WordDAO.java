@@ -10,16 +10,16 @@ import com.mongodb.client.MongoCollection;
 import model.Word;
 
 public class WordDAO {
-	
+
 	private MongoCollection<Document> wordCollection;
-	
-	public WordDAO(){
+
+	public WordDAO() {
 		this.wordCollection = DBConnector.getDatabase().getCollection("words");
 	}
-	
-	public List<Word> getAllWords(){
+
+	public List<Word> getAllWords() {
 		List<Word> words = new ArrayList<>();
-		
+
 		this.wordCollection.find().forEach(new Block<Document>() {
 
 			@SuppressWarnings("unchecked")
@@ -27,50 +27,48 @@ public class WordDAO {
 			public void apply(Document doc) {
 				// TODO Auto-generated method stub
 				Word word = new Word();
-				
+
 				word.setWord(doc.getString("word"));
-				
-				if(doc.get("dependents") instanceof List<?>){
+
+				if (doc.get("dependents") instanceof List<?>) {
 					List<String> dependents = (List<String>) doc.get("dependents");
-					
+
 					word.setDependents(dependents);
 				}
-				
+
 				words.add(word);
 			}
 		});
 		return words;
 	}
-	
-	public Word findWord(String name){
-		Word word = new Word();
-		
-		this.wordCollection.find(new Document("word", name)).forEach(new Block<Document>() {
 
-			@SuppressWarnings("unchecked")
-			@Override
-			public void apply(Document doc) {
-				// TODO Auto-generated method stub
-				word.setWord(doc.getString("word"));
-				if(doc.get("dependents") instanceof List<?>){
-					List<String> dependents = (List<String>) doc.get("dependents");
-					
-					word.setDependents(dependents);
-				}
+	@SuppressWarnings("unchecked")
+	public Word findWord(String name) {
+		Word word = null;
+
+		Document doc = this.wordCollection.find(new Document("word", name)).first();
+
+		if (doc != null) {
+			word = new Word();
+			word.setWord(doc.getString("word"));
+			if (doc.get("dependents") instanceof List<?>) {
+				List<String> dependents = (List<String>) doc.get("dependents");
+
+				word.setDependents(dependents);
 			}
-		});
-		
+		}
+
 		return word;
 	}
-	
-	public boolean updateWord(Word word){
-		if(word != null){
+
+	public boolean updateWord(Word word) {
+		if (word != null) {
 			Document conditions = new Document("word", word.getWord());
 			Document fields = new Document();
-			
-			if(word.getDependents() != null && !word.getDependents().isEmpty()){
-				fields.append("$push", new Document("dependents", word.getDependents()));
-				
+
+			if (word.getDependents() != null && !word.getDependents().isEmpty()) {
+				fields.append("$set", new Document("dependents", word.getDependents()));
+
 				try {
 					this.wordCollection.updateMany(conditions, fields);
 					return true;
@@ -80,16 +78,16 @@ public class WordDAO {
 				}
 			}
 		}
-		
+
 		return false;
 	}
-	
-	public boolean insertWord(Word word){
-		if(word != null){
+
+	public boolean insertWord(Word word) {
+		if (word != null) {
 			Document fields = new Document("word", word.getWord());
-			if(word.getDependents() != null && !word.getDependents().isEmpty()){
+			if (word.getDependents() != null && !word.getDependents().isEmpty()) {
 				fields.append("dependents", word.getDependents());
-				
+
 				try {
 					this.wordCollection.insertOne(fields);
 					return true;
@@ -99,7 +97,7 @@ public class WordDAO {
 				}
 			}
 		}
-		
+
 		return false;
 	}
 
