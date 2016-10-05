@@ -8,14 +8,15 @@
 	<div uib-alert ng-repeat="alert in errors" class="repeated-item" type="{{(alert.type || 'warning')}}" close="closeAlert($index)" dismiss-on-timeout="10000">
 		<strong>Failed!</strong> {{alert.message ? alert.message : alert.statusText}}
 	</div>
-
-	<div class="row word_container">
-		<div class="score_area">
+	
+	<div class="score_area pull-left">
 			<h3>Your score:</h3>
 			<p>
 				<strong>{{point}}</strong>
 			</p>
 		</div>
+
+	<div class="row word_container">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<div ng-show="(words||{}).word.length > 0">
 				<div ng-repeat="item in words.word track by $index" class="word">{{item}}</div>

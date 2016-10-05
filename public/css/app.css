@@ -10,14 +10,9 @@ nav.navbar{
 	border-radius: 0px;
 }
 
-.score_area{
-	position: absolute;
-	top: 10%;
-	left: -85px;
-}
-
 .score_area p{
 	text-align: center;
+	font-size: 2em;
 }
 
 .alert .glyphicon{

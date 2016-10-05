@@ -104,6 +104,7 @@ public class Application extends Controller {
 	public Result getWord() {
 
 		try {
+			point = 0;
 			this.getData();
 		} catch (Exception e) {
 			// TODO: handle exception

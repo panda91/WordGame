@@ -18,7 +18,7 @@ public class WordDAO {
 	}
 
 	public List<Word> getAllWords() {
-		List<Word> words = new ArrayList<>();
+		final List<Word> words = new ArrayList<>();
 
 		this.wordCollection.find().forEach(new Block<Document>() {
 
