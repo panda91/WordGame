@@ -1,4 +1,7 @@
 /* app css stylesheet */
+div.page_content{
+	margin-bottom: 20px;
+}
 .row {
 	margin-top: 10px;
 }
@@ -59,6 +62,12 @@ nav.navbar{
 	height: 30px;
 	text-align: center;
 	display: inline-block;
+}
+
+.word_relative_items{
+	display: inline-block;
+	margin-right: 10px;
+	margin-bottom: 0;
 }
 
 .my_animation {

@@ -18,14 +18,26 @@ import views.html.*;
 
 public class Application extends Controller {
 
-	private static List<Word> wordList;
-	private static Word mainWord;
-	private static Word shuffleWord;
-	private static int point;
+	private List<Word> wordList;
+	private Word mainWord;
+	private Word shuffleWord;
+	private int point;
 
 	public Result index() {
 		point = 0;
 		return ok(index.render());
+	}
+	
+	public Result getWordList(){
+		try {
+			wordList = getAllWords();
+			return ok(Json.toJson(wordList));
+		} catch (Exception e) {
+			// TODO: handle exception
+			ObjectNode objNode = Json.newObject();
+			objNode.put("message", e.getMessage());
+			return internalServerError(objNode);
+		}
 	}
 
 	public Result addWord() {
@@ -55,7 +67,7 @@ public class Application extends Controller {
 				for (String item : dependents) {
 					if (!item.equals("") && !item.equalsIgnoreCase(" ")) {
 						setDependents.add(item.trim().toLowerCase());
-					}else{
+					} else {
 						objNode.put("message", "Your relative words is invalid!");
 						return badRequest(objNode);
 					}
@@ -72,15 +84,17 @@ public class Application extends Controller {
 
 						wordDAO.insertWord(newWord);
 					}
+					wordList = getAllWords();
 
 					objNode.put("status", "OK");
+					objNode.putPOJO("words", Json.toJson(wordList));
 					return ok(objNode);
 				} catch (Exception e) {
 					// TODO: handle exception
 					objNode.put("message", e.getMessage());
 					return internalServerError(objNode);
 				}
-			}else{
+			} else {
 				objNode.put("message", "Word is missing!");
 				return badRequest(objNode);
 			}
@@ -163,14 +177,14 @@ public class Application extends Controller {
 								objNode.put("status", "passed");
 								objNode.putPOJO("items", Json.toJson(maskList));
 							}
-							
+
 							objNode.put("point", ++point);
 
 							return ok(objNode).as("application/json;charset=UTF-8");
 						} else if ((i + 1) == length) {
 							List<String> maskList = shuffleWord.getDependents();
 							for (String item : maskList) {
-								if(item.equals(answerWord)){
+								if (item.equals(answerWord)) {
 									objNode.put("message", "You've already answered this word!");
 									return notFound(objNode);
 								}
@@ -192,13 +206,7 @@ public class Application extends Controller {
 
 	private void getData() {
 		if (wordList == null || wordList.isEmpty()) {
-			try {
-				WordDAO wordDao = new WordDAO();
-				wordList = wordDao.getAllWords();
-			} catch (Exception e) {
-				// TODO: handle exception
-				throw new RuntimeException("Unexpected error in getting data: " + e.getMessage());
-			}
+			wordList = getAllWords();
 		}
 		if (wordList != null && !wordList.isEmpty()) {
 			int index = ThreadLocalRandom.current().nextInt(0, wordList.size());
@@ -207,6 +215,19 @@ public class Application extends Controller {
 
 			wordList.remove(index);
 
+		}
+	}
+
+	private List<Word> getAllWords() {
+		try {
+			WordDAO wordDao = new WordDAO();
+
+			List<Word> wordList = wordDao.getAllWords();
+
+			return wordList;
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw new RuntimeException("Unexpected error in getting data: " + e.getMessage());
 		}
 	}
 

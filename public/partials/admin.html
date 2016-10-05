@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" ng-init="init()">
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<h3 class="panel-title">
@@ -32,5 +32,30 @@
 				</button>
 			</form>
 		</div>
+	</div>
+	
+	<div class="panel panel-primary table-responsive" ng-show="(allWords||{}).length > 0">
+		<!-- Default panel contents -->
+		<div class="panel-heading"><strong>All words <span class="badge">{{(allWords||{}).length}}</span></strong></div>
+	
+		<!-- Table -->
+		<table class="table table-hover table-striped">
+		<thead>
+			<tr>
+				<th>Word</th>
+				<th>Relatives</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="item in allWords">
+				<td>{{item.word}}</td>
+				<td>
+					<span class="well well-sm word_relative_items" ng-repeat="data in item.dependents">
+						{{data}}
+					</span>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 	</div>
 </div>

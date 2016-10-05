@@ -12,6 +12,9 @@ GET        /getWord                          controllers.Application.getWord()
 #Map for getting data when withdrawn
 GET        /withdrawn                        controllers.Application.withdrawn()
 
+#Map for getting data in Admin page
+GET        /getAllWords                      controllers.Application.getWordList()
+
 #Check data
 POST        /checkWord                       controllers.Application.checkWord()
 

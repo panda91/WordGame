@@ -238,6 +238,25 @@ define(function() {
 		$scope.errors = [];
 		$scope.isLoading =false;
 		
+		$scope.allWords = [];
+		
+		$scope.init = function(){
+			$http({
+				method : 'GET',
+				url : '/getAllWords',
+				responseType : 'json',
+				dataType : 'json',
+				headers : {
+					'Content-Type' : 'application/json;charset=UTF-8',
+					'accept' : 'application/json'
+				}
+			}).then(function(res){
+				if(res.data && res.data.length > 0){
+					$scope.allWords = res.data;
+				}
+			}, error);
+		};
+		
 		$scope.submit = function(){
 			if($scope.word.name && $scope.word.relatives){
 				$scope.isLoading =true;
@@ -268,6 +287,10 @@ define(function() {
 							name: "",
 							relatives: ""
 					};
+					
+					if(res.data.words && res.data.words.length > 0){
+						$scope.allWords = res.data.words;
+					}
 					$scope.errors.push({
 						type : "success",
 						message : "Your data added successfully."
