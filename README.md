@@ -1,10 +1,25 @@
-angular-seed-play-java
-======================
+# Word Scramble Game
 
-This is a java port of the angular-seed-play Activator template.
+## Prerequisites
 
-This project illustrates how [WebJars](http://www.webjars.org/) can be used along with
-[requirejs](http://requirejs.org/) in relation to the popular
-[angular-seed](https://github.com/angular/angular-seed) project.
+You must install following to run application:
+* Java 8
+* Play Framework - activator
+* [MongoDB](https://www.mongodb.com/download-center?jmp=docs#community)
 
-The original project is available as a [Typesafe Activator Template](http://typesafe.com/activator/template/angular-seed-play).
+Note: mongodb need to install in order to restore database for application.
+
+## Installing Project
+
+### Import mongo database
+
+First, Open command prompt -> input following:
+>`mongorestore --db word_scramble --collection words --drop --dir <bson files>`
+
+Note: **<bson files>** here is path of bson file. For example: 
+> `mongorestore --db word_scramble --collection words --drop --dir \db_resource\word_scramble\words.bson`
+
+### Run application
+
+Run the following command in currect project folder:
+`activator run`

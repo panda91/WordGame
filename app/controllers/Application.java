@@ -39,6 +39,30 @@ public class Application extends Controller {
 			return internalServerError(objNode);
 		}
 	}
+	
+	public Result deleteWord(String word){
+		ObjectNode objNode = Json.newObject();
+		Word wordModel = new Word();
+		wordModel.setWord(word);
+		
+		try {
+			WordDAO wordDAO = new WordDAO();
+			if(wordDAO.deleteWord(wordModel)){
+				objNode.put("status", "OK");
+				
+				wordList = getAllWords();
+				objNode.putPOJO("list", Json.toJson(wordList));
+			}else{
+				objNode.put("status", "fail");
+			}
+			
+			return ok(objNode);
+		} catch (Exception e) {
+			// TODO: handle exception
+			objNode.put("message", e.getMessage());
+			return internalServerError(objNode);
+		}
+	}
 
 	public Result addWord() {
 		JsonNode json = request().body().asJson();

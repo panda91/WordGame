@@ -21,5 +21,8 @@ POST        /checkWord                       controllers.Application.checkWord()
 #Add data
 POST        /addWord                       	 controllers.Application.addWord()
 
+#Delete data
+GET        /deleteWord/:word                 controllers.Application.deleteWord(word)
+
 # Map the JS resource paths
 GET        /*file                            controllers.Assets.versioned(path="/public", file: Asset)

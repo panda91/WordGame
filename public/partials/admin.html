@@ -1,5 +1,5 @@
 <div class="container" ng-init="init()">
-	<div class="panel panel-default">
+	<div class="panel panel-primary">
 		<div class="panel-heading">
 			<h3 class="panel-title">
 				<strong>Adding More Words</strong>
@@ -44,6 +44,7 @@
 			<tr>
 				<th>Word</th>
 				<th>Relatives</th>
+				<th>Action</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -53,6 +54,11 @@
 					<span class="well well-sm word_relative_items" ng-repeat="data in item.dependents">
 						{{data}}
 					</span>
+				</td>
+				<td>
+					<a class="btn btn-primary" role="button" title="Delete Word" ng-click="deleteWord(item.word)">
+						<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
+					</a>
 				</td>
 			</tr>
 		</tbody>

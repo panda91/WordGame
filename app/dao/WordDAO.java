@@ -6,6 +6,7 @@ import java.util.List;
 import org.bson.Document;
 import com.mongodb.Block;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.result.DeleteResult;
 
 import model.Word;
 
@@ -98,6 +99,23 @@ public class WordDAO {
 			}
 		}
 
+		return false;
+	}
+	
+	public boolean deleteWord(Word word){
+		if(word != null){
+			Document conditions = new Document("word", word.getWord());
+			
+			try {
+				DeleteResult result = this.wordCollection.deleteOne(conditions);
+				if(result.wasAcknowledged()){
+					return true;
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				throw new RuntimeException("Error in delete: " + e.getMessage());
+			}
+		}
 		return false;
 	}
 

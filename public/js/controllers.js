@@ -148,7 +148,7 @@ define(function() {
 				message : response.data.message
 			});
 			
-			if(response.data.point){
+			if(response.data.point != undefined){
 				$scope.point = response.data.point;
 			}
 		}
@@ -314,6 +314,32 @@ define(function() {
 		$scope.closeAlert = function(index) {
 			$scope.errors.splice(index, 1);
 		};
+		
+		$scope.deleteWord = function(word){
+			$http({
+				method : 'GET',
+				url : '/deleteWord/'+word,
+				responseType : 'json',
+				dataType : 'json',
+				headers : {
+					'Content-Type' : 'application/json;charset=UTF-8',
+					'accept' : 'application/json'
+				}
+			}).then(function(res){
+				if(res.data){
+					var status = res.data.status;
+					if(status != 'OK'){
+						$scope.errors.push({
+							type : "danger",
+							message : "Failed to delete! Please try again later."
+						});
+					}
+					else if(res.data.list && res.data.list.length > 0){
+						$scope.allWords = res.data.list;
+					}
+				}
+			}, error);
+		}
 	}
 	
 	controllers.addWordCtrl.$inject = [ '$scope', '$http', '$timeout' ];
